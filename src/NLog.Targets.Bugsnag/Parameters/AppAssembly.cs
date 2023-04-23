@@ -6,7 +6,7 @@ namespace NLog.Targets.Bugsnag.Parameters
     public class AppAssemblyParameter
     {
         /// <summary>
-        /// Gets or sets the database parameter name.
+        /// Gets or sets the assembly parameter name.
         /// </summary>
         [RequiredParameter]
         public string Name { get; set; }
