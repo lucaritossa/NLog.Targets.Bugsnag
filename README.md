@@ -25,7 +25,7 @@ It can be used with version 5.1.1 and later of NLog
       <target xsi:type="Bugsnag, NLog.Targets.Bugsnag"
               name="bugsnag" 
               apikey="your-busgnag-api-key-goes-here"
-              releaseStage="development|production"
+              releaseStage="development|production">
       </target>
     </target>
     <rules>
