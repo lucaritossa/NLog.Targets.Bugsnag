@@ -1,0 +1,37 @@
+﻿{
+  apiKey: abc1234,
+  notifier: {
+    name: .NET Bugsnag Notifier,
+    version: 3.1.0,
+    url: https://github.com/bugsnag/bugsnag-net
+  },
+  events: [
+    {
+      payloadVersion: 4,
+      exceptions: [
+        {
+          errorClass: CallerInfo_IsDefined_Then_IsUsedInStackTrace:34,
+          message: My message,
+          stacktrace: [
+            {
+              file: {ProjectDirectory}StackTraceTest.cs,
+              lineNumber: 34,
+              method: CallerInfo_IsDefined_Then_IsUsedInStackTrace,
+              inProject: false
+            }
+          ]
+        }
+      ],
+      app: {
+        releaseStage: testing,
+        version: Could not find value for entry assembly and version type File
+      },
+      device: {Scrubbed},
+      metaData: {},
+      breadcrumbs: [],
+      unhandled: false,
+      severity: error,
+      context: CallerInfo_IsDefined_Then_IsUsedInStackTrace
+    }
+  ]
+}

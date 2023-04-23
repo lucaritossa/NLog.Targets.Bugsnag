@@ -1,0 +1,40 @@
+<Project>
+  <PropertyGroup>
+    <Authors>Luca Ritossa</Authors>
+    <Company>Luca Ritossa</Company>
+    <Product>NLog Targets Bugsnag</Product>
+    
+    <CurrentYear>$([System.DateTime]::Now.ToString(yyyy))</CurrentYear>
+    <Copyright>Copyright © $(CurrentYear) - Luca Ritossa</Copyright>
+    
+    <Description>NLog target for Bugsnag - https://www.bugsnag.com/</Description>
+
+    <PackageDescription>NLog target for Bugsnag - https://www.bugsnag.com</PackageDescription>
+    <PackageIcon>images\icon.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/lucaritossa/NLog.Targets.Bugsnag</PackageProjectUrl>
+    <PackageTags>nlog target bugsnag</PackageTags>
+    
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/lucaritossa/NLog.Targets.Bugsnag.git</RepositoryUrl>
+    
+    <!-- Optional: Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    
+    <!-- Optional: Build symbol package (.snupkg) to distribute the PDB containing Source Link -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    
+    <!-- Optional: Embed source files that are not tracked by the source control manager in the PDB -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  
+  </PropertyGroup>
+    
+    
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+    
+  <ItemGroup>
+    <None Include="..\..\misc\logo\logo-nuget-icon.png" Pack="true" PackagePath="\images\icon.png" Visible="false" />
+  </ItemGroup>
+</Project>

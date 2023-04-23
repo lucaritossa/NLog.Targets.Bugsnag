@@ -1,0 +1,42 @@
+﻿{
+  apiKey: abc1234,
+  notifier: {
+    name: .NET Bugsnag Notifier,
+    version: 3.1.0,
+    url: https://github.com/bugsnag/bugsnag-net
+  },
+  events: [
+    {
+      payloadVersion: 4,
+      exceptions: [
+        {
+          errorClass: NLog.Targets.Bugsnag.Unit.Tests.StackTraceTest+MyException,
+          message: this is the message of my exception,
+          stacktrace: [
+            {
+              file: {ProjectDirectory}StackTraceTest.cs,
+              lineNumber: 100,
+              method: NLog.Targets.Bugsnag.Unit.Tests.StackTraceTest.MyMethod_That_Throws_An_Exception(),
+              inProject: false
+            },
+            {
+              file: {ProjectDirectory}StackTraceTest.cs,
+              lineNumber: 52,
+              method: NLog.Targets.Bugsnag.Unit.Tests.StackTraceTest+<Exception_IsLogged_Then_StackTraceIsPopulatedd>d__2.MoveNext(),
+              inProject: false
+            }
+          ]
+        }
+      ],
+      app: {
+        releaseStage: testing,
+        version: Could not find value for entry assembly and version type File
+      },
+      device: {Scrubbed},
+      metaData: {},
+      breadcrumbs: [],
+      unhandled: true,
+      severity: error
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+﻿{
+  apiKey: abc1234,
+  notifier: {
+    name: .NET Bugsnag Notifier,
+    version: 3.1.0,
+    url: https://github.com/bugsnag/bugsnag-net
+  },
+  events: [
+    {
+      payloadVersion: 4,
+      exceptions: [
+        {
+          errorClass: NLog,
+          message: My message,
+          stacktrace: [
+            {
+              lineNumber: 0,
+              inProject: false
+            }
+          ]
+        }
+      ],
+      app: {
+        releaseStage: testing,
+        version: Could not find value for entry assembly and version type File
+      },
+      device: {Scrubbed},
+      metaData: {},
+      breadcrumbs: [],
+      unhandled: false,
+      severity: error,
+      context: Headers_IsDefined_But_CannotBeDeserialized_Then_ItIsUsed_As_Is,
+      request: {
+        headers: {
+          key1: my headers with layout: Headers_IsDefined_But_CannotBeDeserialized_Then_ItIsUsed_As_Is
+        }
+      }
+    }
+  ]
+}

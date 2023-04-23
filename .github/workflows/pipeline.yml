@@ -1,0 +1,147 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: build
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+    tags:
+      - '*'
+
+  pull_request:
+    branches:
+      - '*'
+
+  release:
+    types:
+      - published
+
+  workflow_dispatch:
+    inputs:
+      publishPack:
+        description: 'publish nuget packages'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  # Path to the solution file relative to the root of the project.
+  SOLUTION_FILE_PATH: ${{github.workspace}}/src
+
+  # Configuration type to build.
+  # You can convert this to a build matrix if you need coverage of multiple configuration types.
+  # https://docs.github.com/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+  BUILD_CONFIGURATION: Release
+  BUILD_PLATFORM: Any CPU
+  NUGET_OUTPUT_PATH: ${{github.workspace}}/nuget
+  
+  MANUAL_PUBLISH_PACK: ${{github.event.inputs.publishPack && github.event.inputs.publishPack != 'false'}}
+  
+  GITHUB_EVENT_NAME: ${{github.event_name}}
+  GITHUB_REF: ${{github.ref}}
+  
+  FROM_TAG_PUBLISH_PACK: ${{ github.event_name == 'push' && (contains(github.ref, '/heads/main') || contains(github.ref, '/tags/v')) }}
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+    - name: echo variables
+      env:
+        PUBLISH_PACK: ${{github.event.inputs.publishPack}}
+      run: |
+        Write-Host "This step shows the 'env' variables currently set"
+        
+    - name: git | checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: .NET | setup
+      uses: microsoft/setup-msbuild@v1.0.2
+
+    - name: CACHE | nuget
+      uses: actions/cache@v2.1.8
+      with:
+        # A list of files, directories, and wildcard patterns to cache and restore
+        path: ~/.nuget/packages 
+        # An explicit key for restoring and saving the cache
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }} #hash of project files
+        # An ordered list of keys to use for restoring the cache if no cache hit occurred for key
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+        # The chunk size used to split up large files during upload, in bytes
+        # upload-chunk-size: # optional
+
+    - name: NuGet | restore packages
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: nuget restore ${{env.SOLUTION_FILE_PATH}}
+
+    - name: .NET | build
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      # Add additional options to the MSBuild command line here (like platform or verbosity level).
+      # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
+      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} /p:platform="${{env.BUILD_PLATFORM}}" ${{env.SOLUTION_FILE_PATH}} 
+
+    - name: .NET | test setup
+      uses: darenm/Setup-VSTest@v1.2
+
+    - name: .NET | test
+      uses: tonyhallett/vstest-solution-action@v1.0.2
+      with:
+        solution: "/src/NLog.Targets.Bugsnag.sln"
+        configuration: ${{env.BUILD_CONFIGURATION}}
+
+    - name: .NET | upload artifact
+      uses: actions/upload-artifact@v3.1.2
+      with:
+        name: build-output
+        if-no-files-found: error
+        path: ${{env.SOLUTION_FILE_PATH}}
+     
+    - name: .NET | prepare package
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: msbuild /t:pack /p:PackageOutputPath="${{env.NUGET_OUTPUT_PATH}}" /p:NoBuild=true /p:Configuration=${{env.BUILD_CONFIGURATION}} /p:platform="${{env.BUILD_PLATFORM}}" ${{env.SOLUTION_FILE_PATH}}
+  
+    - name: NuGet | upload artifact
+      uses: actions/upload-artifact@v3.1.2
+      with:
+        name: nuget-output
+        if-no-files-found: error
+        path: ${{env.NUGET_OUTPUT_PATH}}
+
+  publish:
+    runs-on: windows-2022
+    needs: [ build ] 
+    if: ${{ (github.event.inputs.publishPack && github.event.inputs.publishPack != 'false') || (github.event_name == 'push' && (contains(github.ref, '/heads/main') || contains(github.ref, '/tags/v'))) }}
+    steps:
+    
+    - name: NuGet | download artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: nuget-output
+        path: ${{env.NUGET_OUTPUT_PATH}}
+        
+    - name: NuGet | push
+      # You may pin to the exact commit or the version.
+      # uses: edumserrano/nuget-push@2c99a0cae97df631eb2526ddd171a55dd5228289
+      uses: edumserrano/nuget-push@v1.2.2
+      with:
+        # The API key for the NuGet server. Used when pushing the NuGet packages and symbols.
+        api-key: ${{secrets.NUGET_PAT}}
+        # Indicates whether this actions should fail if the NuGet package being pushed already exists. Defaults to false.
+        fail-if-exists: false
+        # The directory that will be used to push NuGet packages. It will push all NuGet packages (*.nupkg) and corresponding symbol packages (*.snupkg) present in the directory.
+        working-directory: "${{env.NUGET_OUTPUT_PATH}}"
+ 
