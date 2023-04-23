@@ -20,15 +20,21 @@ It can be used with version 5.1.1 and later of NLog
 
     `Install-Package NLog.Target.Bugsnag`
 
-2) Use the target type `"Bugsnag, NLog.Targets.Bugsnag"` in your nlog.config including apiKey and releaseStage
+2) Use the target type `"Bugsnag, NLog.Targets.Bugsnag"` in your nlog.config including apiKey and releaseStage (see [Configuration](/docs/configuration.md) page for all parameters). Best with [AsyncWrappers](https://github.com/NLog/NLog/wiki/AsyncWrapper-target)
 
     ```xml
-          <target name="bugsnag" xsi:type="Bugsnag, NLog.Targets.Bugsnag"
-                  apikey="your-busgnag-api-key-goes-here"
-                  releaseStage="development|production"
-          </target>
+    <target name="bugsnagAsync" xsi:type="AsyncWrapper">
+      <target xsi:type="Bugsnag, NLog.Targets.Bugsnag"
+              name="bugsnag" 
+              apikey="your-busgnag-api-key-goes-here"
+              releaseStage="development|production"
+      </target>
+    </target>
+    <rules>
+      <logger minLevel="Error" writeTo="bugsnagAsync" />
+    </rules>
     ```
-    
+     
 ### Support
 
 NLog Bugsnag is open source software maintained by voluntary contributors in their spare time and on a best effort basis.
