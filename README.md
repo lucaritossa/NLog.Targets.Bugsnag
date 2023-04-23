@@ -16,9 +16,7 @@ It can be used with version 5.1.1 and later of NLog
 
 ### How to use
 
-1) Install the package
-
-    `Install-Package NLog.Target.Bugsnag`
+1) Install the package [NLog.Targets.Bugsnag](https://www.nuget.org/packages/NLog.Targets.Bugsnag)
 
 2) Use the target type `"Bugsnag, NLog.Targets.Bugsnag"` in your nlog.config including apiKey and releaseStage (see [Configuration](/docs/configuration.md) page for all parameters). Best with [AsyncWrappers](https://github.com/NLog/NLog/wiki/AsyncWrapper-target)
 
