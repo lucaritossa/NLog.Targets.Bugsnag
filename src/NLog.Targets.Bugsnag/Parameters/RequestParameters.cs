@@ -17,6 +17,6 @@ namespace NLog.Targets.Bugsnag.Parameters
         public RequestParameter Headers { get; set; } = new RequestParameter();
         public RequestParameter HttpMethod { get; set; } = new RequestParameter();
         public RequestParameter Url { get; set; } = new RequestParameter();
-        public RequestParameter Referer { get; set; } = new RequestParameter();
+        public RequestParameter Referrer { get; set; } = new RequestParameter();
     }
 }

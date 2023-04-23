@@ -108,8 +108,8 @@ namespace NLog.Targets.Bugsnag.Unit.Tests
             // Arrange
             var target = GetDefaultTarget();
 
-            target.Request.Referer.Include = true;
-            target.Request.Referer.Layout = "my referer with layout: ${logger}"; // fixed text + a layout renderer
+            target.Request.Referrer.Include = true;
+            target.Request.Referrer.Layout = "my referer with layout: ${logger}"; // fixed text + a layout renderer
 
             var logger = SetupNLog(target);
 
@@ -151,7 +151,7 @@ namespace NLog.Targets.Bugsnag.Unit.Tests
             target.Request.ClientIp.Include = false;
             target.Request.Headers.Include = false;
             target.Request.HttpMethod.Include = false;
-            target.Request.Referer.Include = false;
+            target.Request.Referrer.Include = false;
             target.Request.Url.Include = false;
 
             return target;

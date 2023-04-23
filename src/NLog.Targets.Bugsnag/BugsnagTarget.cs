@@ -215,12 +215,12 @@ namespace NLog.Targets.Bugsnag
                 request.Url = Request.Url.Layout.Render(logEvent);
             }
 
-            if (Request.Referer.Include)
+            if (Request.Referrer.Include)
             {
-                if (Request.Referer.Layout == null)
-                    Request.Referer.Layout = "${aspnet-request-referrer}";
+                if (Request.Referrer.Layout == null)
+                    Request.Referrer.Layout = "${aspnet-request-referrer}";
 
-                request.Referer = Request.Referer.Layout.Render(logEvent);
+                request.Referer = Request.Referrer.Layout.Render(logEvent);
             }
 
             report.Event.Request = request;
