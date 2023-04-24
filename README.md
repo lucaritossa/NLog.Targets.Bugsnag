@@ -3,7 +3,7 @@
 [![pipeline](https://github.com/lucaritossa/NLog.Targets.Bugsnag/actions/workflows/pipeline.yml/badge.svg?branch=main)](https://github.com/lucaritossa/NLog.Targets.Bugsnag/actions/workflows/pipeline.yml)
 [![NuGet Badge](https://buildstats.info/nuget/NLog.Targets.Bugsnag?includePreReleases=false)](https://www.nuget.org/packages/NLog.Targets.Bugsnag)
 
-NLog.Targets.Busgnag
+NLog.Targets.Bugsnag
 =======================
 
 NLog Target to send your messages to Bugsnag service with the possibility to include all details like App, Request and (still in WIP) User infos.
