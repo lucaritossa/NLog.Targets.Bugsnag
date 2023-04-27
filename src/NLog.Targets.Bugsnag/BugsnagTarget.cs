@@ -24,10 +24,10 @@ namespace NLog.Targets.Bugsnag
         #region Public Properties
 
         [RequiredParameter]
-        public string ApiKey { get; set; }
+        public Layout ApiKey { get; set; }
 
         [RequiredParameter]
-        public string ReleaseStage { get; set; }
+        public Layout ReleaseStage { get; set; }
 
         public Layout Context { get; set; }
         public Layout ErrorClass { get; set; }
@@ -35,7 +35,7 @@ namespace NLog.Targets.Bugsnag
         public AppParameters App { get; } = new AppParameters();
         public RequestParameters Request { get; } = new RequestParameters();
 
-        public string Endpoint { get; set; }
+        public Layout Endpoint { get; set; }
 
         #endregion
 
@@ -45,22 +45,25 @@ namespace NLog.Targets.Bugsnag
         {
             _bugsnag = new Lazy<Client>(() =>
             {
-                if (string.IsNullOrEmpty(ApiKey))
+                var apiKey = RenderLogEvent(ApiKey, LogEventInfo.CreateNullEvent());
+                if (string.IsNullOrEmpty(apiKey))
                     throw new NLogConfigurationException(string.Format(_parameterNotConfigured, nameof(ApiKey), nameof(BugsnagTarget)));
 
-                if (string.IsNullOrEmpty(ReleaseStage))
+                var releaseStage = RenderLogEvent(ReleaseStage, LogEventInfo.CreateNullEvent());
+                if (string.IsNullOrEmpty(releaseStage))
                     throw new NLogConfigurationException(string.Format(_parameterNotConfigured, nameof(ReleaseStage), nameof(BugsnagTarget)));
 
                 var config = new Configuration
                 {
-                    ApiKey = ApiKey,
-                    ReleaseStage = ReleaseStage,
+                    ApiKey = apiKey,
+                    ReleaseStage = releaseStage,
                 };
 
-                if (!string.IsNullOrWhiteSpace(Endpoint))
+                var endpoint = RenderLogEvent(Endpoint, LogEventInfo.CreateNullEvent());
+                if (!string.IsNullOrWhiteSpace(endpoint))
                 {
                     InternalLogger.Warn("{0}: Bugsnag endpoint was specified by configuration. Usually for testing purpose, the messages could not be sent to official Bugsnag service.", this);
-                    config.Endpoint = new Uri(Endpoint);
+                    config.Endpoint = new Uri(endpoint);
                 }
 
                 InternalLogger.Debug("{0}: Bugsnag client configured successfully", this);

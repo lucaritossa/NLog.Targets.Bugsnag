@@ -66,8 +66,7 @@ namespace NLog.Targets.Bugsnag.Unit.Tests
             var actual = await TestCasesSetup.BugsnagTestServer.GetRequest();
 
             // Assert
-            Assert.IsTrue(actual.ContainsKey("apiKey"));
-            Assert.AreEqual(target.ApiKey, actual.GetValue("apiKey").Value<string>());
+            await Verifier.Verify(actual).ToTask();
         }
 
         [Test]
