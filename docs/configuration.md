@@ -2,8 +2,8 @@
 ```xml
 <target xsi:type="Bugsnag, NLog.Targets.Bugsnag"
         name="String" 
-        apikey="String"
-        releaseStage="String"
+        apikey="Layout"
+        releaseStage="Layout"
         context="Layout"
         errorClass="Layout">
   <app appType="Layout"
